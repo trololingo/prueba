@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrícula de Vehículos</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlaza al CSS externo -->
+</head>
+<body>
+    <header>
+        <h1>Matrícula de Vehículos</h1>
+    </header>
+
+    <main>
+        <form id="vehicleForm">
+            <div>
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div>
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" name="telefono" required>
+            </div>
+            <div>
+                <label for="marca">Marca del vehículo:</label>
+                <input type="text" id="marca" name="marca" required>
+            </div>
+            <div>
+                <label for="modelo">Modelo del vehículo:</label>
+                <input type="text" id="modelo" name="modelo" required>
+            </div>
+            <div>
+                <label for="ano">Año del vehículo:</label>
+                <input type="number" id="ano" name="ano" min="1900" max="2099" required>
+            </div>
+            <div>
+                <label for="placa">Número de placa:</label>
+                <input type="text" id="placa" name="placa" required>
+            </div>
+            <button type="submit">Enviar solicitud</button>
+            <div class="success-message" id="successMessage" style="display: none;">
+                ¡Datos enviados exitosamente!
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // URL de la API de SheetDB
+        const sheetDBUrl = 'https://sheetdb.io/api/v1/n2geoseg5dtl0';
+
+        document.getElementById('vehicleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Recoge los datos del formulario
+            const formData = {
+                "data": {
+                    "nombre": document.getElementById('nombre').value,
+                    "email": document.getElementById('email').value,
+                    "telefono": document.getElementById('telefono').value,
+                    "marca": document.getElementById('marca').value,
+                    "modelo": document.getElementById('modelo').value,
+                    "ano": document.getElementById('ano').value,
+                    "placa": document.getElementById('placa').value
+                }
+            };
+
+            // Envía los datos a SheetDB
+            fetch(sheetDBUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('vehicleForm').reset(); // Limpia el formulario
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
